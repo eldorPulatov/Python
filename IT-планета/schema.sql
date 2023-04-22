@@ -68,3 +68,153 @@ CREATE TABLE IF NOT EXISTS public."VisitedLocation"(
     "dateTimeOfVisitLocationPoint" text COLLATE pg_catalog."default" NOT NULL,
     "locationPointId" integer NOT NULL
 );
+
+after VisitedLocation
+
+CREATE OR REPLACE FUNCTION public.set_datetimeofvisitlocationpoint()
+
+RETURNS trigger
+
+LANGUAGE 'plpgsql'
+
+COST 100
+
+VOLATILE NOT LEAKPROOF
+
+AS $BODY$
+
+BEGIN
+
+NEW."dateTimeOfVisitLocationPoint" = to_char(NOW(), 'YYYY-MM-DD"T"HH24:MI:SS"Z"');
+
+RETURN NEW;
+
+END;
+
+$BODY$;
+
+CREATE TRIGGER insert_datetime_of_visitlocationpoint
+
+BEFORE INSERT
+
+ON public."VisitedLocation"
+
+FOR EACH ROW
+
+EXECUTE FUNCTION public.set_datetimeofvisitlocationpoint();
+
+after Animal
+
+CREATE OR REPLACE FUNCTION public.set_chipping_date()
+
+RETURNS trigger
+
+LANGUAGE 'plpgsql'
+
+COST 100
+
+VOLATILE NOT LEAKPROOF
+
+AS $BODY$
+
+BEGIN
+
+IF NEW.chippingDateTime IS NULL THEN
+
+NEW.chippingDateTime = to_char(NOW(), 'YYYY-MM-DD"T"HH24:MI:SS"Z"');
+
+END IF;
+
+RETURN NEW;
+
+END;
+
+$BODY$;
+
+--
+
+CREATE OR REPLACE FUNCTION public.set_chippingdatetime()
+
+RETURNS trigger
+
+LANGUAGE 'plpgsql'
+
+COST 100
+
+VOLATILE NOT LEAKPROOF
+
+AS $BODY$
+
+BEGIN
+
+NEW."chippingDateTime" = to_char(NOW(), 'YYYY-MM-DD"T"HH24:MI:SS"Z"');
+
+RETURN NEW;
+
+END;
+
+$BODY$;
+
+CREATE OR REPLACE FUNCTION public.update_death_date()
+
+RETURNS trigger
+
+LANGUAGE 'plpgsql'
+
+COST 100
+
+VOLATILE NOT LEAKPROOF
+
+AS $BODY$
+
+BEGIN
+
+IF (NEW."lifeStatus" = 'DEAD' AND NEW."deathDateTime" IS NULL)
+
+OR (OLD."lifeStatus" <> 'DEAD' AND NEW."lifeStatus" = 'DEAD' AND NEW."deathDateTime" IS NULL) THEN
+
+NEW."deathDateTime" = to_char(NOW(), 'YYYY-MM-DD"T"HH24:MI:SS"Z"');
+
+END IF;
+
+RETURN NEW;
+
+END;
+
+$BODY$;
+
+--
+
+--
+
+CREATE TRIGGER insert_chippingdatetime
+
+BEFORE INSERT
+
+ON public."Animal"
+
+FOR EACH ROW
+
+EXECUTE FUNCTION public.set_chippingdatetime();
+
+CREATE TRIGGER insert_datetimeofvisitlocationpoint
+
+BEFORE INSERT
+
+ON public."Animal"
+
+FOR EACH ROW
+
+EXECUTE FUNCTION public.set_datetimeofvisitlocationpoint();
+
+
+
+CREATE TRIGGER update_death_date_trigger
+
+BEFORE UPDATE
+
+ON public."Animal"
+
+FOR EACH ROW
+
+EXECUTE FUNCTION public.update_death_date();
