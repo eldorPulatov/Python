@@ -1,7 +1,4 @@
 from peewee import *
-#
-# db = PostgresqlDatabase('animals', user='postgres', password='123',
-#                         host='localhost', port=5432)
 
 db = PostgresqlDatabase('animals', user='qwerty', password='123',
                         host='database', port=5432)
