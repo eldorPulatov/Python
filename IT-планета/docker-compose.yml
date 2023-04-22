@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  database:
+    container_name: postgres_container
+    image: postgres:latest
+    restart: always
+    volumes:
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    environment:
+      - POSTGRES_DB=animals
+      - POSTGRES_USER=qwerty
+      - POSTGRES_PASSWORD=123
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d animals" ]
+      interval: 5s
+      retries: 10
+
+
+  webapi:
+    container_name: webapi_container
+    image: webapi
+    ports:
+      - "8080:8080"
+    volumes:
+      - /app
+    depends_on:
+      database:
+        condition: service_healthy
+
+  tests:
+    container_name: tests_container
+    image: mrexpen/planet_olymp_phase2
+    pull_policy: always
+    ports:
+      - "8090:8080"
+    depends_on:
+      - webapi
+    environment:
+      SERVER_URL: http://webapi:8080
+      STAGE: 0

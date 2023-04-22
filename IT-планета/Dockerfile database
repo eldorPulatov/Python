@@ -1,0 +1,11 @@
+FROM postgres:latest
+
+COPY schema.sql /docker-entrypoint-initdb.d/
+
+ENV POSTGRES_PASSWORD='123'
+
+ENV POSTGRES_DB='animals'
+
+ENV POSTGRES_USER='qwerty'
+
+EXPOSE 5432
