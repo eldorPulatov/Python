@@ -30,19 +30,19 @@ def post_registration():
 
 @app.route('/accounts/<accountId>', methods=['GET'])
 def get_account(accountId):
-    # if 'Authorization' in request.headers:
-    #     check = check_Authorization(request.headers)
-    #     if not check:
-    #         return make_response("401 Error", 401)
-    # else:
-    #     return make_response("401 Error! Not authorized request", 401)
+    if 'Authorization' in request.headers:
+        check = check_Authorization(request.headers)
+        if not check:
+            return make_response("401 Error", 401)
+    else:
+        return make_response("401 Error! Not authorized request", 401)
 
     if int(accountId) and int(accountId) > 0:
-    #     role = take_roleand_id(request.headers)
-    #     if role['role'] in ['USER', 'CHIPPER']:
-    #         if role['id'] != int(accountId):
-    #             return make_response("403 Error", 403)
-    #     else:
+        role = take_roleand_id(request.headers)
+        if role['role'] in ['USER', 'CHIPPER']:
+            if role['id'] != int(accountId):
+                return make_response("403 Error", 403)
+        else:
         response = select_account_id(int(accountId))
         if not response:
             return make_response("404 Account with this accountId not found", 404)
