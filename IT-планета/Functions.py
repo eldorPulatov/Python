@@ -6,33 +6,6 @@ from Models import *
 from shapely.geometry import Polygon, LineString, Point
 from shapely.validation import explain_validity
 
-# with db:
-#     params = {
-#         "firstName": "adminFirstName",
-#         "lastName": "adminLastName",
-#         "email": "admin@simbirsoft.com",
-#         "password": "qwerty123",
-#         "role": "ADMIN"
-#     }
-#     Account.create(**params)
-#     params = {
-#         "firstName": "chipperFirstName",
-#         "lastName": "chipperLastName",
-#         "email": "chipper@simbirsoft.com",
-#         "password": "qwerty123",
-#         "role": "CHIPPER"
-#     }
-#     Account.create(**params)
-#     params = {
-#         "firstName": "userFirstName",
-#         "lastName": "userLastName",
-#         "email": "user@simbirsoft.com",
-#         "password": "qwerty123",
-#         "role": "USER"
-#     }
-#     Account.create(**params)
-
-
 def valid_animalTypes(animalTypes: list) -> bool:
     """
     Функция проверки на наличие эл. со значением NULL или <= 0
