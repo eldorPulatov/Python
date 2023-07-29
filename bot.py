@@ -18,6 +18,9 @@ class NYTimes_science(BotFunctionABC):
             bot.send_message(message.chat.id, response)
 
     def Top_stories(self):
+        """
+        Функция, которая перебирает заголовки новостей в области науки NYTiems
+        """
         try:
             response = requests.get(self.url)
             if response.status_code == 200:
